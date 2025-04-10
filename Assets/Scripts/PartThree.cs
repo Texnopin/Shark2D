@@ -14,19 +14,31 @@ public class PartThree : MonoBehaviour
     private Vector3 posHook;
     [SerializeField] private Animator barrel;
 
+    [SerializeField] private GameObject HUD;
+
     [SerializeField] private Animator canvas;
     [SerializeField] private RectTransform mainFoneImage;
     [SerializeField] private RectTransform playNowButton;
     [SerializeField] private Button finishButton;
 
+    [SerializeField] private Animator _tutorial;
+
     private void Start()
     {
+        //HUD.SetActive(true);
         posHook = new Vector3(184, -219.299988f, 0f);
         playerHook.gameObject.SetActive(true);
         tapToPlay.gameObject.SetActive(true);
-        tapToPlay.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Tab to collect";
+        tapToPlay.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Tap to collect";
         tapToPlay.Play("Scale");
-        Invoke("Collect", 5);
+        //Invoke("Collect", 5);
+        _tutorial.gameObject.GetComponent<RectTransform>().position = tapToPlay.gameObject.GetComponent<RectTransform>().position;
+        Invoke("Tutorial", 5f);
+    }
+
+    private void FixedUpdate()
+    {
+        _tutorial.gameObject.GetComponent<RectTransform>().position = tapToPlay.gameObject.GetComponent<RectTransform>().position;
     }
 
     private void Update()
@@ -66,6 +78,8 @@ public class PartThree : MonoBehaviour
     {
         if(mainFoneImage.gameObject.activeSelf == false && tapToPlay.gameObject.activeSelf == true)
         {
+            _tutorial.gameObject.SetActive(false);
+            _tutorial.SetBool("TapAnim", false);
             tapToPlay.gameObject.SetActive(false);
             barrel.Play("barrel");
             Invoke("FinishPlayble", 1f);
@@ -74,8 +88,15 @@ public class PartThree : MonoBehaviour
 
     public void FinishPlayble()
     {
+        Destroy(_tutorial.gameObject);
         mainFoneImage.gameObject.SetActive(true);
         finishButton.gameObject.SetActive(true);
         canvas.Play("PlayNow");
+    }
+
+    private void Tutorial()
+    {
+        _tutorial.gameObject.SetActive(true);
+        _tutorial.SetBool("TapAnim", true);
     }
 }

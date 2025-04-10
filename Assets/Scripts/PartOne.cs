@@ -20,6 +20,8 @@ public class PartOne : MonoBehaviour
 
     [SerializeField] private Animator success;
 
+    [SerializeField] private Animator _tutorial;
+
     private bool nextPart = false;
 
     private void Start()
@@ -27,7 +29,7 @@ public class PartOne : MonoBehaviour
         tapToPlay.gameObject.SetActive(true);
         tapToPlay.Play("Scale");
         /*MaterialvideoShark_animator = MaterialvideoShark_animator.GetComponent<Animator>();*/
-        Invoke("AutomaticComplitePart", 5f);
+        Invoke("Tutorial", 5f);
     }
 
     private void Update()
@@ -44,6 +46,8 @@ public class PartOne : MonoBehaviour
 
     public void Attack()
     {
+        _tutorial.SetBool("TapAnim", false);
+        _tutorial.gameObject.SetActive(false);
         tapToPlay.gameObject.SetActive(false);
         nextPart = true;
         player.Play("Attack");
@@ -78,8 +82,19 @@ public class PartOne : MonoBehaviour
 
     private void Wait() 
     {
+        //_tutorial.gameObject.SetActive(false);
+        _tutorial.SetBool("TapAnim", false);
         success.gameObject.SetActive(false);
         Controller.Complite(this.gameObject);
+    }
+
+    private void Tutorial()
+    {
+        if (!nextPart)
+        {
+            _tutorial.gameObject.SetActive(true);
+            _tutorial.SetBool("TapAnim", true);
+        }
     }
 
 }
